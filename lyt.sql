@@ -4,9 +4,8 @@ CREATE TABLE IF NOT EXISTS lyt_member(
 	mName VARCHAR(50) NOT NULL UNIQUE,	-- 昵称
 	mInfo JSON,						-- 用户信息
 	mValidPhone TINYINT NOT NULL DEFAULT 0,	-- 是否手机认证 1认证 0未认证
-	mValidName TINYINT NOT NULL DEFAULT 0,	-- 是否实名认证 1认证 0未认证
 	mRegdate timestamp NOT NULL,			-- 注册时间
-	mDel TINYINT NOT NULL DEFAULT 0 		-- 软删除 1删除 0未删除
+	mDel TINYINT NOT NULL DEFAULT 0 		-- 软删除 1禁用 0开启
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- 创建手机登录信息表
@@ -54,7 +53,7 @@ CREATE TABLE IF NOT EXISTS lyt_roll(
 	rID INT NOT NULL, -- 用户ID
 	rName VARCHAR(20) NOT NULL,	-- 角色名
 	rAddTime timestamp DEFAULT CURRENT_TIMESTAMP  ON UPDATE CURRENT_TIMESTAMP, -- 添加时间
-	rDel TINYINT NOT NULL DEFAULT 0 -- 软删除 1删除 0未删除
+	rDel TINYINT NOT NULL DEFAULT 0 -- 软删除 1禁用 0开启
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- 创建角色权限表

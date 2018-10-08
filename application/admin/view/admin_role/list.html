@@ -45,7 +45,7 @@
 				<td><input id="check-box" type="checkbox" value="{$vo.rID}" name=""></td>
 				<td>{$vo.rID}</td>
 				<td>{$vo.rName}</td>
-				<td><a href="javascript:;" onclick="status('{$vo.rID}')">{if condition="$vo.rDel == 0"}开启{else /}禁用{/if}</a></td>
+				<td><a href="javascript:;" onclick="status(this,'{$vo.rID}')" class="status">{if condition="$vo.rDel == 0"}开启{else /}禁用{/if}</a></td>
 				<td>{$vo.rAddTime}</td>
 				<td class="f-14"><a title="编辑" href="javascript:;" onclick="admin_role_edit('角色编辑','/admin/Role_edit?id={$vo.rID}','1')" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="admin_role_del(this,'{$vo.rID}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 			</tr>
@@ -63,16 +63,18 @@
 <script type="text/javascript" src="/static/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     /*管理员-角色-状态*/
-	function status(id) {
+	function status(obj,id) {
+        // console.log($(obj).html())
 		$.post('/admin/Role_status',{id:id},function (data) {
-		    console.log(data)
-            // if(data == 1) {
-            //     $(obj).parents("tr").remove();
-            //     window.location.href = "/admin/role";
-            //     layer.msg('已修改!',{icon:1,time:1000});
-            // }else if(data == 2){
-            //     layer.msg('修改失败!',{icon:2,time:1000});
-            // }
+            if(data == 1) {
+                if($(obj).html() == '开启'){
+                    $(obj).html('禁用')
+				}else{
+                    $(obj).html('开启')
+				}
+            }else if(data == 2){
+                layer.msg('修改失败!',{icon:2,time:1000});
+            }
         })
     }
 	/*管理员-角色-删除*/
