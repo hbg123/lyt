@@ -112,7 +112,7 @@ function admin_role_del(obj,id){
 			success: function(data){
                 if(data == 1) {
                     $(obj).parents("tr").remove();
-                    window.location.href = "/admin/role";
+                    window.location.href = "/admin/role_list";
                     layer.msg('已删除!',{icon:1,time:1000});
                 }else if(data == 2){
                     layer.msg('删除失败!',{icon:2,time:1000});

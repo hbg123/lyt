@@ -38,11 +38,12 @@ class Index extends Controller
      */
     public function getList()
     {
+        //创建请求对象
+        $request = request();
+        $keyword = $request->get("keyword");
         $list = Db::field('m.mName,m.mRegdate,m.mDel,p.paNum,r.rName,a.amID')
-            ->table(['lyt_member'=> 'm','lyt_phone_activation'=> 'p','lyt_admin_member'=> 'a','lyt_roll'=> 'r'])->where('a.amID = m.mID AND a.rID=r.rID')
-            ->select();
-        var_dump($list);die;
-        return $this->fetch('/admin/list',['list'=>$list]);
+            ->table(['lyt_member'=> 'm','lyt_phone_activation'=> 'p','lyt_admin_member'=> 'a','lyt_roll'=> 'r'])->where('m.mName','like','%'.$keyword.'%')->where('a.amID = m.mID AND a.rID=r.rID')->where('a.amID = p.mID')->paginate(10);
+        return $this->fetch('/admin/list',['list'=>$list,'keyword'=>$keyword,'request'=>$request->param()]);
     }
     /**
      * @Method Name: 管理员添加页
@@ -173,7 +174,7 @@ class Index extends Controller
      * @Author:
      * @Return:
      */
-    public function getRole()
+    public function getRole_list()
     {
         $list = db('roll')->order('rID asc')->select();
         return $this->fetch('/admin_role/list',['list'=>$list]);
@@ -274,9 +275,125 @@ class Index extends Controller
      * @Author:
      * @Return:
      */
-    public function getAuth()
+    public function getAuth_list()
     {
-        return $this->fetch('/admin_auth/list');
+        //创建请求对象
+        $request = request();
+        $keyword = $request->get("keyword");
+        $list = $this->getCates($keyword);
+        return $this->fetch('/admin_auth/list',['list'=>$list,'keyword'=>$keyword,]);
+    }
+    /**
+     * @Method Name: 权限添加页
+     * @describe
+     * @Author:
+     * @Return:
+     */
+    public function getAuth_add()
+    {
+        $list = $this->getCates();
+        return $this->fetch('/admin_auth/add',['list'=>$list]);
+    }
+    /**
+     * @Method Name: 权限添加
+     * @describe
+     * @Author:
+     * @Return:
+     */
+    public function postAuth_add()
+    {
+        if($_POST['amParentID'] == 0){
+            $_POST['amPath'] = 0;
+            $_POST['amModule'] = 0;
+        }else{
+            $info = db('auth_menu')->where('amID',$_POST['amParentID'])->find();
+            $_POST['amPath'] = $info['amPath'].','.$info['amID'];
+            $module = explode(',',$_POST['amPath']);
+            $_POST['amModule'] = $module[1];
+        }
+        if(isset($_POST['amID'])){
+            $result = db('auth_menu')->where('amID',$_POST['amID'])->update($_POST);
+        }else{
+            $result = db('auth_menu')->insert($_POST);
+        }
+        if($result){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+    /**
+     * @Method Name: 权限修改页
+     * @describe
+     * @Author:
+     * @Return:
+     */
+    public function getAuth_edit()
+    {
+        $data = db('auth_menu')->where('amID',$_GET['amID'])->find();
+        $list = $this->getCates();
+        return $this->fetch('/admin_auth/edit',['data'=>$data,'list'=>$list]);
+    }
+    /**
+     * @Method Name: 菜单删除
+     * @describe：菜单删除
+     * @Author:
+     * @Return:
+     */
+    public function postAuth_del()
+    {
+        $result = db('auth_menu')->where('amID',$_POST['id'])->delete();
+        if($result){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+    /**
+     * @Method Name: 权限状态修改
+     * @describe：权限状态修改
+     * @Author:
+     * @Return:
+     */
+    public function postAuth_status()
+    {
+        $status = db('auth_menu')->field('amHidden')->where('amID',$_POST['id'])->find();
+        $data = array();
+        if($status['amHidden'] == 0){
+            $data['amHidden'] = 1;
+        }else{
+            $data['amHidden'] = 0;
+        }
+        $result = db('auth_menu')->where('amID',$_POST['id'])->update($data);
+        if($result){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+    /**
+     * @Method Name: 调整权限顺序
+     * @describe
+     * @Author:
+     * @Return:
+     */
+    //调整导航类别顺序
+    public function getCates($keyword = ''){
+        if($keyword == ''){
+            $data = Db::query("select *,concat(amPath,',',amID) as amPath from lyt_auth_menu order by amPath");
+        }else{
+            $data = Db::query("select *,concat(amPath,',',amID) as amPath from lyt_auth_menu where amName like '%{$keyword}%' order by amPath");
+        }
+        //遍历
+        foreach($data as $key=>$value){
+            //转为数组
+            $arr=explode(',',$value['amPath']);
+            //获取逗号个数
+            $len=count($arr)-2;
+            //字符串重复函数
+            $data[$key]['class_amName']=str_repeat('— —|',$len).$value['amName'];
+        }
+        return $data;
     }
     /**
      * @Method Name: 随机获取字符串
