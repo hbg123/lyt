@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>总后台登录界面</title>
+<link href="/static/admin/css/login.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/static/admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+</head>
+<body>
+    <div class="login">
+        <div class="loginbox">
+            <div class="loginmain">
+                <form onsubmit="return false;">
+                <div class="loginname">手机号：<input id="paNum" type="text" class="" name="paNum"></div>
+                <div class="loginpwd">密 &nbsp;码：<input id="paPW" type="password" class="paPW"></div>
+                <a href="index.html"><input id="btn_login" type="submit" value="" class="loginbtn"></a>
+                <input id="btn_reset" type="reset" value="" class="resetbtn">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $("form").submit(function(e){
+        var paNum = $('#paNum').val()
+        var paPW = $('#paPW').val()
+        $.post('/login/dologin',{paNum:paNum,paPW:paPW},function (data) {
+            if(data = 2){
+                alert('用户名不存在')
+            }
+        })
+    });
+</script>
+</html>

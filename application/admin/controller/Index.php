@@ -187,7 +187,8 @@ class Index extends Controller
      */
     public function getRole_add()
     {
-        return $this->fetch('/admin_role/add');
+        $cate=$this->cates(0);
+        return $this->fetch('/admin_role/add',['cate'=>$cate]);
     }
     /**
      * @Method Name: 角色添加
@@ -197,8 +198,16 @@ class Index extends Controller
      */
     public function postRole_add()
     {
-        $_POST['rAddTime'] = date('YmdHis',time());
-        $result = db('roll')->insert($_POST);
+        $data_roll = array(
+            'rName'=>$_POST['rName'],
+            'rAddTime'=>date('YmdHis',time())
+        );
+        $rID = db('roll')->insertGetId($data_roll);
+        foreach($_POST['amID'] as $key=>$value){
+            $data_auth[$key]['rID'] = $rID;
+            $data_auth[$key]['amID'] = $value;
+        }
+        $result = db('auth_roll')->insertAll($data_auth);
         if($result){
             return 1;
         }else{
@@ -213,8 +222,11 @@ class Index extends Controller
      */
     public function getRole_edit()
     {
+        $cate=$this->cates(0);
         $data = db('roll')->field('rID,rName')->where('rID',$_GET['id'])->find();
-        return $this->fetch('/admin_role/edit',['data'=>$data]);
+        $data_auth = db('auth_roll')->field('amID')->where('rID',$_GET['id'])->select();
+        $data_auth = array_column($data_auth, 'amID');
+        return $this->fetch('/admin_role/edit',['data'=>$data,'cate'=>$cate,'data_auth'=>$data_auth]);
     }
     /**
      * @Method Name: 角色修改
@@ -224,8 +236,16 @@ class Index extends Controller
      */
     public function postRole_edit()
     {
-        $_POST['rAddTime'] = date('YmdHis',time());
-        $result = db('roll')->where('rID',$_POST['rID'])->update($_POST);
+        $data_roll = array(
+            'rName'=>$_POST['rName'],
+        );
+        $res_roll = db('roll')->where('rID',$_POST['rID'])->update($data_roll);
+        $res_auth = db('auth_roll')->where('rID',$_POST['rID'])->delete();
+        foreach($_POST['amID'] as $key=>$value){
+            $data_auth[$key]['rID'] = $_POST['rID'];
+            $data_auth[$key]['amID'] = $value;
+        }
+        $result = db('auth_roll')->insertAll($data_auth);
         if($result){
             return 1;
         }else{
@@ -240,8 +260,9 @@ class Index extends Controller
      */
     public function postRole_del()
     {
-        $result = db('roll')->where('rID',$_POST['id'])->delete();
-        if($result){
+        $res_roll = db('roll')->where('rID',$_POST['id'])->delete();
+        $res_auth = db('auth_roll')->where('rID',$_POST['id'])->delete();
+        if($res_roll && $res_auth){
             return 1;
         }else{
             return 2;
@@ -406,5 +427,21 @@ class Index extends Controller
         $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         $str = str_shuffle($str);
         return substr($str,0,$length);
+    }
+    /**
+     * @Method Name: 获取无限分类递归数据
+     * @describe
+     * @Author:
+     * @Return:
+     */
+    public function cates($pid){
+        $data=db("auth_menu")->where('amParentID',$pid)->select();
+        //遍历
+        $data1=array();
+        foreach($data as $key=>$value){
+            $value['menu']=$this->cates($value['amID']);
+            $data1[]=$value;
+        }
+        return $data1;
     }
 }
