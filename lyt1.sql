@@ -11,7 +11,7 @@
  Target Server Version : 50711
  File Encoding         : 65001
 
- Date: 10/10/2018 18:01:04
+ Date: 11/10/2018 18:00:25
 */
 
 SET NAMES utf8mb4;
@@ -55,16 +55,16 @@ CREATE TABLE `lyt_auth_menu`  (
 -- Records of lyt_auth_menu
 -- ----------------------------
 INSERT INTO `lyt_auth_menu` VALUES (1, '权限&管理员管理', 0, '', 0, 0, 0, 0, '0');
-INSERT INTO `lyt_auth_menu` VALUES (2, '管理员列表', 1, '/admin/list', 0, 0, 0, 1, '0,1');
-INSERT INTO `lyt_auth_menu` VALUES (3, '角色管理', 1, '/admin/role_list', 0, 0, 0, 1, '0,1');
-INSERT INTO `lyt_auth_menu` VALUES (4, '权限管理', 1, '/admin/auth_list', 0, 4, 0, 1, '0,1');
-INSERT INTO `lyt_auth_menu` VALUES (5, '管理员添加', 2, '/admin/add', 0, 1, 0, 1, '0,1,2');
-INSERT INTO `lyt_auth_menu` VALUES (7, '管理员修改', 2, '/admin/edit', 0, 3, 0, 1, '0,1,2');
-INSERT INTO `lyt_auth_menu` VALUES (8, '管理员删除', 2, '/admin/del', 0, 2, 0, 1, '0,1,2');
-INSERT INTO `lyt_auth_menu` VALUES (9, '角色添加', 3, '/admin/role_add', 0, 1, 0, 1, '0,1,3');
-INSERT INTO `lyt_auth_menu` VALUES (10, '管理员查看', 2, '/admin/list', 0, 4, 0, 1, '0,1,2');
-INSERT INTO `lyt_auth_menu` VALUES (11, '角色查看', 3, '/admin/role_list', 0, 4, 0, 1, '0,1,3');
-INSERT INTO `lyt_auth_menu` VALUES (12, '权限查看', 4, '/admin/auth_list', 0, 4, 0, 1, '0,1,4');
+INSERT INTO `lyt_auth_menu` VALUES (2, '管理员列表', 1, '/index/list', 0, 0, 0, 1, '0,1');
+INSERT INTO `lyt_auth_menu` VALUES (3, '角色管理', 1, '/index/role_list', 0, 0, 0, 1, '0,1');
+INSERT INTO `lyt_auth_menu` VALUES (4, '权限管理', 1, '/index/auth_list', 0, 4, 0, 1, '0,1');
+INSERT INTO `lyt_auth_menu` VALUES (5, '管理员添加', 2, '/index/add', 0, 1, 0, 1, '0,1,2');
+INSERT INTO `lyt_auth_menu` VALUES (7, '管理员修改', 2, '/index/edit', 0, 3, 0, 1, '0,1,2');
+INSERT INTO `lyt_auth_menu` VALUES (8, '管理员删除', 2, '/index/del', 0, 2, 0, 1, '0,1,2');
+INSERT INTO `lyt_auth_menu` VALUES (9, '角色添加', 3, '/index/role_add', 0, 1, 0, 1, '0,1,3');
+INSERT INTO `lyt_auth_menu` VALUES (10, '管理员查看', 2, '/index/list', 0, 4, 0, 1, '0,1,2');
+INSERT INTO `lyt_auth_menu` VALUES (11, '角色查看', 3, '/index/role_list', 0, 4, 0, 1, '0,1,3');
+INSERT INTO `lyt_auth_menu` VALUES (12, '权限查看', 4, '/index/auth_list', 0, 4, 0, 1, '0,1,4');
 
 -- ----------------------------
 -- Table structure for lyt_auth_roll

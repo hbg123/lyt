@@ -8,32 +8,32 @@
 namespace app\admin\controller;
 use think\Controller;
 use think\Db;
-class Index extends Controller
+class Index extends Allow
 {
     /**
      * @Method Name: 总后台首页
      * @describe: 进入总后台得首页
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
-    public function index()
+    public function getIndex()
     {
-        return $this->fetch('/welcome/index');
+        return $this->fetch('/welcome/index',['uname'=>session('uname')]);
     }
     /**
      * @Method Name: 欢迎页
      * @describe：总后台首页右边部分
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
-    public function getIndex()
+    public function getWelcome()
     {
         return $this->fetch('/welcome/welcome');
     }
     /**
      * @Method Name: 管理员列表
      * @describe：展示管理员信息
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getList()
@@ -48,7 +48,7 @@ class Index extends Controller
     /**
      * @Method Name: 管理员添加页
      * @describe：管理员添加
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getAdd()
@@ -59,7 +59,8 @@ class Index extends Controller
     /**
      * @Method Name: 执行管理员添加
      * @describe：先插入用户表，再把插入成功得id当作用户id插入手机登录信息表和总后台管理员表
-     * @Author:
+     * @param: $paSalt 获取4位随机数作为盐码
+     * @Author:如梦一场
      * @Return:
      */
     public function postAdd()
@@ -70,7 +71,6 @@ class Index extends Controller
             'mRegdate'=>date('YmdHis',time())
         );
         $mID = db('member')->insertGetId($data);
-        //获取4位随机数作为盐码
         $paSalt = $this->paSalt();
         $data_phone = array(
             'mID'=>$mID,
@@ -94,7 +94,7 @@ class Index extends Controller
     /**
      * @Method Name: 管理员修改页
      * @describe：管理员修改
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getEdit()
@@ -107,7 +107,7 @@ class Index extends Controller
     /**
      * @Method Name: 执行管理员修改
      * @describe：管理员修改1 成功 2 原密码错误 3 与原密码一致 4 修改失败
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postEdit()
@@ -132,7 +132,7 @@ class Index extends Controller
     /**
      * @Method Name: 管理员状态修改
      * @describe：管理员状态修改
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postMem_status()
@@ -154,7 +154,7 @@ class Index extends Controller
     /**
      * @Method Name: 管理员删除
      * @describe：管理员删除
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postDel()
@@ -171,7 +171,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色列表页
      * @describe：角色展示
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getRole_list()
@@ -182,7 +182,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色添加页
      * @describe：角色添加页面
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getRole_add()
@@ -193,7 +193,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色添加
      * @describe：角色添加
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postRole_add()
@@ -217,7 +217,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色修改页
      * @describe：角色修改页面
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getRole_edit()
@@ -231,7 +231,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色修改
      * @describe：角色修改
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postRole_edit()
@@ -255,7 +255,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色删除
      * @describe：角色删除
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postRole_del()
@@ -271,7 +271,7 @@ class Index extends Controller
     /**
      * @Method Name: 角色状态修改
      * @describe：角色状态修改
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postRole_status()
@@ -293,12 +293,11 @@ class Index extends Controller
     /**
      * @Method Name: 权限管理页
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getAuth_list()
     {
-        //创建请求对象
         $request = request();
         $keyword = $request->get("keyword");
         $list = $this->getCates($keyword);
@@ -307,7 +306,7 @@ class Index extends Controller
     /**
      * @Method Name: 权限添加页
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getAuth_add()
@@ -318,7 +317,7 @@ class Index extends Controller
     /**
      * @Method Name: 权限添加
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postAuth_add()
@@ -346,7 +345,7 @@ class Index extends Controller
     /**
      * @Method Name: 权限修改页
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function getAuth_edit()
@@ -358,7 +357,7 @@ class Index extends Controller
     /**
      * @Method Name: 菜单删除
      * @describe：菜单删除
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postAuth_del()
@@ -373,7 +372,7 @@ class Index extends Controller
     /**
      * @Method Name: 权限状态修改
      * @describe：权限状态修改
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function postAuth_status()
@@ -395,7 +394,7 @@ class Index extends Controller
     /**
      * @Method Name: 调整权限顺序
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     //调整导航类别顺序
@@ -419,7 +418,7 @@ class Index extends Controller
     /**
      * @Method Name: 随机获取字符串
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     function paSalt( $length = 4 )
@@ -431,7 +430,7 @@ class Index extends Controller
     /**
      * @Method Name: 获取无限分类递归数据
      * @describe
-     * @Author:
+     * @Author:如梦一场
      * @Return:
      */
     public function cates($pid){
